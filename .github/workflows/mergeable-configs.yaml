@@ -23,7 +23,7 @@ jobs:
           ref: main
           path: buildindocker
       - name: Install valint
-       run: curl -sSfL https://get.scribesecurity.com/install.sh   | sh -s -- -t valint -D
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
       - name: Build valint
         run: |
           cd valint
@@ -87,7 +87,8 @@ jobs:
             --policy sample-policies/policies/sarif/docker-scout
           SARIF_FILE=$(find cache/ -name "*.sarif")
           echo "SARIF_FILE=$SARIF_FILE" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@v3.1.3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: valint-report
           path: ${{ env.SARIF_FILE }}
