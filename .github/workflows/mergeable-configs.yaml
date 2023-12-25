@@ -10,16 +10,16 @@ jobs:
     name: Full-Kit Policy Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout sample-policies
         uses: actions/checkout@v4
         with:
-          repository: scribe-security/sample-policies.git
+          repository: scribe-security/sample-policies
           ref: feature/mergeable_valint_configs
           path: sample-policies
       - name: Checkout test repo
         uses: actions/checkout@v4
         with:
-          repository: scribe-public/buildInDocker.git
+          repository: scribe-public/buildInDocker
           ref: main
           path: buildindocker
       - name: Install valint
