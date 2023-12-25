@@ -89,3 +89,8 @@ jobs:
           name: valint-report
           path: |
             cache/*.sarif
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@vlatest
+        with:
+          sarif_file: cache/*.sarif
+          category: valint
