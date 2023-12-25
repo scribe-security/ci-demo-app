@@ -106,8 +106,8 @@ jobs:
         with:
           name: valint-report
           path: |
-            - valint-report.sarif
-            - cache/*.provenance*
+            valint-report.sarif
+            cache/*.provenance*
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v2
         with:
