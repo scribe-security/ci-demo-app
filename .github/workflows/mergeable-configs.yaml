@@ -99,6 +99,7 @@ jobs:
       - name: Convert in-toto statement to SARIF
         run: |
           SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.SARIF_FILE }})
+          echo $SARIF_CONTENT
           echo $SARIF_CONTENT > valint-report.sarif
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.3
