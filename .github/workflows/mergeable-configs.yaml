@@ -10,8 +10,6 @@ jobs:
     name: Build SBOMs & test policies
     runs-on: ubuntu-latest
     steps:
-      - name: checkout current repo # for sarif uploading
-        uses: actions/checkout@v2
       - name: Checkout sample-policies
         uses: actions/checkout@v2
         with:
