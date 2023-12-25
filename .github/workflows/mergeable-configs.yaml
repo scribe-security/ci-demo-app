@@ -93,7 +93,7 @@ jobs:
           name: valint-report
           path: ${{ env.SARIF_FILE }}
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@latest
+        uses: codeql-action/upload-sarif@latest
         with:
           sarif_file: ${{ env.SARIF_FILE }}
           category: valint
