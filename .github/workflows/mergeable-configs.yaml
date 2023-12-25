@@ -29,8 +29,8 @@ jobs:
       - name: Create Git SBOM
         run:
           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -f -o statement --components commits,files \
-          --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
-          -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Setup Buildx for Docker
         uses: docker/setup-buildx-action@v2
       - name: Build Docker Image
@@ -45,13 +45,13 @@ jobs:
       - name: Create Docker Image SBOM
         run:
           ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -f -o statement \
-          --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
-          -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Create SLSA evidence
         run:
           ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -f -o statement \
-          --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
-          -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -62,8 +62,8 @@ jobs:
         run: |
           ${HOME}/.scribe/bin/valint bom trivy-results.sarif \
             --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
-            -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
+              -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: tfsec
         uses: aquasecurity/tfsec-sarif-action@v0.1.0
         with:
@@ -72,9 +72,9 @@ jobs:
       - name: Create Evidence out of tfsec report
         run: |
           ${HOME}/.scribe/bin/valint bom tfsec-results.sarif \
-            --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
-            -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
+              --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
+              -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Run valint verify
         continue-on-error: true
         run: |
@@ -84,9 +84,9 @@ jobs:
             --policy sample-policies/policies/git \
             --policy sample-policies/policies/apis/gith-branch-protection.yml \
               --policy-args Token=${{ secrets.GITHUB_TOKEN }} \
-              --policy-args Owner=${{ env.GITHUB_REPOSITORY_OWNER }} \
-              --policy-args Repo=${{ env.GITHUB_REPOSITORY }} \
-              --policy-args Branch=${{ env.GITHUB_REF_NAME }} \
+              --policy-args Owner=${{ github.repository_owner }} \
+              --policy-args Repo=${{ github.repository }} \
+              --policy-args Branch=${{ github.ref_name }} \
             --policy sample-policies/policies/images \
             --policy sample-policies/policies/sboms \
             --policy sample-policies/policies/slsa \
