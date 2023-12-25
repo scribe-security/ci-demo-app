@@ -53,18 +53,12 @@ jobs:
           ${HOME}/.scribe/bin/valint bom trivy-results.sarif \
             --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
             -C github -f -o statement-generic --product-key buildindocker --product-version v0.1 -d cache
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3.0.0
-        with:
-          registry: http://127.0.0.1:8080
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Docker Scout
         id: docker-scout
         uses: docker/scout-action@v1.2.2
         with:
           command: cves
-          image: buildindocker:latest
+          image: local://buildindocker:latest
           sarif-file: docker-results.sarif
       - name: Create Evidence out of Docker Scout report
         run: |
