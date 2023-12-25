@@ -118,5 +118,3 @@ jobs:
         with:
           sarif_file: valint-report.sarif
           category: valint
-          ref: main
-          sha: c603cd1f09c229ec26ac8cba4a899474d049be38
