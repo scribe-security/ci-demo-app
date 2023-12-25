@@ -79,6 +79,8 @@ jobs:
             --policy sample-policies/policies/slsa \
             --policy sample-policies/policies/sarif/trivy \
             --policy sample-policies/policies/sarif/tfsec
+      - name: Lookup valint SARIF report
+        run: |
           SARIF_FILE=$(find cache/ -name "*.sarif")
           echo "SARIF_FILE=$SARIF_FILE" >> "$GITHUB_ENV"
       - name: Upload artifact
