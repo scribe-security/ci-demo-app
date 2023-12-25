@@ -3,6 +3,7 @@ on: [push, workflow_dispatch]
 
 env:
   PATH: ${PATH}:${HOME}/.scribe/bin
+  SARIF_FILE: ""
 
 jobs:
   full-kit-test:
@@ -73,24 +74,25 @@ jobs:
       - name: Run valint verify
         run: |
           valint verify -C github -i statement --push -o sarif --product-key buildindocker --product-version v0.1 -d cache \
-          --policy sample-policies/policies/git \
-          --policy sample-policies/policies/apis/gith-branch-protection.yml \
-            --policy-args Token=${{ secrets.GITHUB_TOKEN }} \
-            --policy-args Owner=${{ env.GITHUB_REPOSITORY_OWNER }} \
-            --policy-args Repo=${{ env.GITHUB_REPOSITORY }} \
-            --policy-args Branch=${{ env.GITHUB_REF_NAME }} \
-          --policy sample-policies/policies/images \
-          --policy sample-policies/policies/sboms \
-          --policy sample-policies/policies/slsa \
-          --policy sample-policies/policies/sarif/trivy \
-          --policy sample-policies/policies/sarif/docker-scout
+            --policy sample-policies/policies/git \
+            --policy sample-policies/policies/apis/gith-branch-protection.yml \
+              --policy-args Token=${{ secrets.GITHUB_TOKEN }} \
+              --policy-args Owner=${{ env.GITHUB_REPOSITORY_OWNER }} \
+              --policy-args Repo=${{ env.GITHUB_REPOSITORY }} \
+              --policy-args Branch=${{ env.GITHUB_REF_NAME }} \
+            --policy sample-policies/policies/images \
+            --policy sample-policies/policies/sboms \
+            --policy sample-policies/policies/slsa \
+            --policy sample-policies/policies/sarif/trivy \
+            --policy sample-policies/policies/sarif/docker-scout
+          SARIF_FILE=$(find cache/ -name "*.sarif")
+          echo "SARIF_FILE=$SARIF_FILE" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@v3.1.3
         with:
           name: valint-report
-          path: |
-            cache/*.sarif
+          path: ${{ env.SARIF_FILE }}
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@vlatest
+        uses: github/codeql-action/upload-sarif@latest
         with:
-          sarif_file: cache/*.sarif
+          sarif_file: ${{ env.SARIF_FILE }}
           category: valint
