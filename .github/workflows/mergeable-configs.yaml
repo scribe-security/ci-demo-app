@@ -27,7 +27,7 @@ jobs:
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
       - name: Create Git SBOM
-        run:
+        run: |
           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -f -o statement --components commits,files \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
@@ -43,12 +43,12 @@ jobs:
           cache-to: type=gha,mode=max
           push: false
       - name: Create Docker Image SBOM
-        run:
+        run: |
           ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -f -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Create SLSA evidence
-        run:
+        run: |
           ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -f -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
