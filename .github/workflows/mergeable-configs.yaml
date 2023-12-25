@@ -11,6 +11,10 @@ jobs:
     name: Build SBOMs & test policies
     runs-on: ubuntu-latest
     steps:
+      - name: Set env vars
+        run: |
+          HOSTNAME="$(hostname -s)"
+          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v2
       - name: Checkout sample-policies
@@ -76,9 +80,6 @@ jobs:
               --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
               -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
               -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
-      - name: Set env vars
-        run: |
-          echo "HOSTNAME="$(hostname -s)" >> $GITHUB_ENV
       - name: Run valint verify
         continue-on-error: true
         run: |
