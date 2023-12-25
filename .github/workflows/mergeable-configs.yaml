@@ -78,7 +78,7 @@ jobs:
               -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Set env vars
         run: |
-          echo "HOSTNAME="$(hostname)" >> $GITHUB_ENV
+          echo "HOSTNAME="$(hostname -s)" >> $GITHUB_ENV
       - name: Run valint verify
         continue-on-error: true
         run: |
