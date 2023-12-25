@@ -39,8 +39,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: buildindocker
-          tags: buildindocker:latest
-          load: true
+          tags: localhost:5000/buildindocker:latest
+          load: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
