@@ -26,13 +26,16 @@ jobs:
       - name: Create Git SBOM
         run:
           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -f -o statement --components commits,files --product-key buildindocker --product-version v0.1 -d cache
-      - uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3.0.0
+      - name: Setup Buildx for Docker
+        uses: docker/setup-buildx-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          driver-opts: network=host
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3.0.0
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker Image
         uses: docker/build-push-action@v4
         with:
@@ -61,13 +64,15 @@ jobs:
             -C github -f -o statement-generic --product-key buildindocker --product-version v0.1 -d cache
       - name: Run Docker Scout
         id: docker-scout
-        uses: docker/scout-action@v1.2.2
-        with:
-          command: cves
-          image: local://buildindocker:latest
-          sarif-file: docker-results.sarif
-          registry-user: ${{ github.actor }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker scout cves buildindocker:latest --format sarif -o docker-results.sarif
+        # uses: docker/scout-action@v1.2.2
+        # with:
+        #   command: cves
+        #   image: localhost:5000/buildindocker:latest
+        #   sarif-file: docker-results.sarif
+        #   registry-user: ${{ github.actor }}
+        #   registry-password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Evidence out of Docker Scout report
         run: |
           ${HOME}/.scribe/bin/valint bom docker-results.sarif \
