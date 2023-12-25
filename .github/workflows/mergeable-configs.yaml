@@ -28,17 +28,15 @@ jobs:
           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -f -o statement --components commits,files --product-key buildindocker --product-version v0.1 -d cache
       - name: Setup Buildx for Docker
         uses: docker/setup-buildx-action@v2
-        with:
-          driver-opts: network=host
       - name: Build Docker Image
         uses: docker/build-push-action@v4
         with:
           context: buildindocker
           tags: buildindocker:latest
-          load: false
+          load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          push: true
+          push: false
       - name: Create Docker Image SBOM
         run:
           ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
