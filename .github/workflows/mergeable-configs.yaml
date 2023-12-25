@@ -1,0 +1,91 @@
+name: Full-Kit Policy Test
+on: [push, workflow_dispatch]
+
+env:
+  PATH: ${PATH}:${HOME}/.scribe/bin
+
+jobs:
+  full-kit-test:
+    name: Full-Kit Policy Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: scribe-security/sample-policies.git
+          ref: feature/mergeable_valint_configs
+          path: sample-policies
+      - name: Checkout test repo
+        uses: actions/checkout@v4
+        with:
+          repository: scribe-public/buildInDocker.git
+          ref: main
+          path: buildindocker
+      - name: Install valint
+       run: curl -sSfL https://get.scribesecurity.com/install.sh   | sh -s -- -t valint -D
+      - name: Build valint
+        run: |
+          cd valint
+          make bootstrap
+          make binary
+      - name: Create Git SBOM
+        run:
+          valint bom git:buildindocker/ -C github -f -o statement --components commits,files --product-key buildindocker --product-version v0.1 -d cache
+      - uses: docker/setup-buildx-action@v2
+      - name: Build Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: buildindocker
+          tags: buildindocker:latest
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: false
+      - name: Create Docker Image SBOM
+        run:
+          valint bom docker:buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
+      - name: Create SLSA evidence
+        run:
+          valint slsa docker:buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'buildindocker:latest'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      - name: Create Evidence out of Trivy report
+        run: |
+          valint bom trivy-results.sarif \
+            --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
+            -C github -f -o statement-generic --product-key buildindocker --product-version v0.1 -d cache
+      - name: Run Docker Scout
+        id: docker-scout
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: buildindocker:latest
+          sarif-file: docker-results.sarif
+      - name: Create Evidence out of Docker Scout report
+        run: |
+          valint bom docker-results.sarif \
+            --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
+            -C github -f -o statement-generic --product-key buildindocker --product-version v0.1 -d cache
+      - name: Run valint verify
+        run: |
+          valint verify -C github -i statement --push -o sarif --product-key buildindocker --product-version v0.1 -d cache \
+          --policy sample-policies/policies/git \
+          --policy sample-policies/policies/apis/gith-branch-protection.yml \
+            --policy-args Token=${{ secrets.GITHUB_TOKEN }} \
+            --policy-args Owner=${{ env.GITHUB_REPOSITORY_OWNER }} \
+            --policy-args Repo=${{ env.GITHUB_REPOSITORY }} \
+            --policy-args Branch=${{ env.GITHUB_REF_NAME }} \
+          --policy sample-policies/policies/images \
+          --policy sample-policies/policies/sboms \
+          --policy sample-policies/policies/slsa \
+          --policy sample-policies/policies/sarif/trivy \
+          --policy sample-policies/policies/sarif/docker-scout
+      - uses: actions/upload-artifact@v3.1.3
+        with:
+          name: valint-report
+          path: |
+            cache/*.sarif
