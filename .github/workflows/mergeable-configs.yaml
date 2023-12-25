@@ -8,6 +8,11 @@ jobs:
   full-kit-test:
     name: Full-Kit Policy Test
     runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     steps:
       - name: Checkout sample-policies
         uses: actions/checkout@v2
@@ -30,12 +35,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           driver-opts: network=host
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v3.0.0
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker Image
         uses: docker/build-push-action@v4
         with:
@@ -44,17 +43,17 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          push: false
+          push: true
       - name: Create Docker Image SBOM
         run:
-          ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
+          ${HOME}/.scribe/bin/valint bom localhost:5000/buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
       - name: Create SLSA evidence
         run:
-          ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
+          ${HOME}/.scribe/bin/valint slsa localhost:5000/buildindocker:latest -C github -f -o statement --product-key buildindocker --product-version v0.1 -d cache
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'buildindocker:latest'
+          image-ref: 'localhost:5000/buildindocker:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
       - name: Create Evidence out of Trivy report
@@ -62,17 +61,21 @@ jobs:
           ${HOME}/.scribe/bin/valint bom trivy-results.sarif \
             --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
             -C github -f -o statement-generic --product-key buildindocker --product-version v0.1 -d cache
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: localhost:5000
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Docker Scout
         id: docker-scout
-        run: |
-          docker scout cves buildindocker:latest --format sarif -o docker-results.sarif
-        # uses: docker/scout-action@v1.2.2
-        # with:
-        #   command: cves
-        #   image: localhost:5000/buildindocker:latest
-        #   sarif-file: docker-results.sarif
-        #   registry-user: ${{ github.actor }}
-        #   registry-password: ${{ secrets.GITHUB_TOKEN }}
+        uses: docker/scout-action@v1.2.2
+        with:
+          command: cves
+          image: localhost:5000/buildindocker:latest
+          sarif-file: docker-results.sarif
+          registry-user: ${{ github.actor }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Evidence out of Docker Scout report
         run: |
           ${HOME}/.scribe/bin/valint bom docker-results.sarif \
