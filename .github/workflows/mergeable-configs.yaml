@@ -81,14 +81,14 @@ jobs:
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com \
             --policy sample-policies/policies/git \
             --policy sample-policies/policies/apis/gith-branch-protection.yml \
-              --policy-args Token=${{ secrets.GITHUB_TOKEN }} \
-              --policy-args Owner=${{ github.repository_owner }} \
-              --policy-args Repo=${{ github.repository }} \
-              --policy-args Branch=${{ github.ref_name }} \
+              --policy-args Token="${{ secrets.GITHUB_TOKEN }}" \
+              --policy-args Owner="${{ github.repository_owner }}" \
+              --policy-args Repo="${{ github.repository }}" \
+              --policy-args Branch="${{ github.ref_name }}" \
             --policy sample-policies/policies/images \
             --policy sample-policies/policies/sboms \
             --policy sample-policies/policies/slsa \
-              -- policy-args BUILDER_ID="${{ runner.name }}" \
+              --policy-args BUILDER_ID="${{ runner.name }}" \
             --policy sample-policies/policies/sarif/trivy \
             --policy sample-policies/policies/sarif/tfsec
       - name: Lookup valint SARIF report
