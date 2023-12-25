@@ -66,6 +66,8 @@ jobs:
           command: cves
           image: local://buildindocker:latest
           sarif-file: docker-results.sarif
+          dockerhub-user: ${{ github.actor }}
+          dockerhub-password: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Evidence out of Docker Scout report
         run: |
           ${HOME}/.scribe/bin/valint bom docker-results.sarif \
