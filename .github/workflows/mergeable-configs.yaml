@@ -92,8 +92,8 @@ jobs:
             --policy sample-policies/policies/sarif/tfsec
       - name: Lookup valint SARIF report
         run: |
-          SARIF_FILE=$(find cache/ -name "*.sarif")
-          echo "SARIF_FILE=$SARIF_FILE" >> "$GITHUB_ENV"
+          SARIF_FILE="$(find cache/ -name "*.sarif")"
+          echo "SARIF_FILE=${SARIF_FILE}" >> $GITHUB_ENV
       - name: 'Setup jq'
         uses: dcarbone/install-jq-action@v2.1.0
       - name: Convert in-toto statement to SARIF
