@@ -98,7 +98,8 @@ jobs:
         uses: dcarbone/install-jq-action@v2.1.0
       - name: Convert in-toto statement to SARIF
         run: |
-          jq -r '.predicate.content' ${{ env.SARIF_FILE }} > valint-report.sarif
+          SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.SARIF_FILE }})
+          echo $SARIF_CONTENT > valint-report.sarif
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.3
         with:
