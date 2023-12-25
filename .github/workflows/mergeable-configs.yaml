@@ -5,8 +5,8 @@ env:
   SARIF_FILE: ""
 
 jobs:
-  build-sboms:
-    name: Build SBOMs
+  full-kit-check:
+    name: Build SBOMs & test policies
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sample-policies
@@ -64,11 +64,6 @@ jobs:
           ${HOME}/.scribe/bin/valint bom tfsec-results.sarif \
             --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
             -C github -f -o statement-generic --product-key buildindocker --product-version v0.1 -d cache
-  valint-verify:
-    name: "valint verify"
-    runs-on: ubuntu-latest
-    needs: build-sboms
-    steps:
       - name: Run valint verify
         continue-on-error: true
         run: |
