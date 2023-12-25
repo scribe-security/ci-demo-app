@@ -108,10 +108,10 @@ jobs:
           path: |
             valint-report.sarif
             cache/*.provenance*
+      - name: Checkout current repo (maybe sarif uploading will work?)
+        uses: actions/checkout@v2
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: valint-report.sarif
           category: valint
-          ref: ${{ github.ref_name }}
-          sha: ${{ github.sha }}
