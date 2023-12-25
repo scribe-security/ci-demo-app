@@ -23,11 +23,6 @@ jobs:
           path: buildindocker
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
-      - name: Build valint
-        run: |
-          cd valint
-          make bootstrap
-          make binary
       - name: Create Git SBOM
         run:
           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -f -o statement --components commits,files --product-key buildindocker --product-version v0.1 -d cache
