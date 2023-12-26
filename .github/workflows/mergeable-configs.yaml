@@ -15,6 +15,8 @@ jobs:
         run: |
           HOSTNAME="$(hostname -s)"
           echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Checkout sample-policies
         uses: actions/checkout@v2
         with:
@@ -31,7 +33,7 @@ jobs:
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
       - name: Create Git SBOM
         run: |
-          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -f -o statement --components commits,files \
+          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -c mergeable.yaml -f -o statement --components commits,files \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Setup Buildx for Docker
@@ -47,12 +49,12 @@ jobs:
           push: false
       - name: Create Docker Image SBOM
         run: |
-          ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -f -o statement \
+          ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Create SLSA evidence
         run: |
-          ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -f -o statement \
+          ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Run Trivy vulnerability scanner
@@ -65,7 +67,7 @@ jobs:
         run: |
           ${HOME}/.scribe/bin/valint bom trivy-results.sarif \
             --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
-              -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+              -C github -c mergeable.yaml -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
               -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: tfsec
         uses: aquasecurity/tfsec-sarif-action@v0.1.0
@@ -76,12 +78,12 @@ jobs:
         run: |
           ${HOME}/.scribe/bin/valint bom tfsec-results.sarif \
               --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
-              -C github -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
+              -C github -c mergeable.yaml -f -o statement-generic --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
               -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com
       - name: Run valint verify
         continue-on-error: true
         run: |
-          DEBUG=true ${HOME}/.scribe/bin/valint verify -C github -i statement --push -o statement -vv \
+          DEBUG=true ${HOME}/.scribe/bin/valint verify -C github -c mergeable.yaml -i statement --push -o statement -vv \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com \
             --policy sample-policies/policies/git \
@@ -106,8 +108,6 @@ jobs:
       #   run: |
       #     SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.SARIF_FILE }})
       #     echo $SARIF_CONTENT > valint-report.sarif
-      - name: Dummy Checkout
-        uses: actions/checkout@v2
       - name: DEBUG print SARIF file
         run: |
           cat valint-report.sarif
@@ -121,5 +121,5 @@ jobs:
         with:
           sarif_file: valint-report.sarif
           category: valint
-          ref: refs/heads/main
-          sha: c603cd1f09c229ec26ac8cba4a899474d049be38
+          ref: ${{ github.ref }}
+          sha: ${{ github.sha }}
