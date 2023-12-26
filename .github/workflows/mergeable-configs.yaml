@@ -86,7 +86,7 @@ jobs:
       - name: Run valint verify
         continue-on-error: true
         run: |
-          DEBUG=true ${HOME}/.scribe/bin/valint verify -C github -c mergeable.yaml -i statement --push -o statement -vv \
+          ${HOME}/.scribe/bin/valint verify -C github -c mergeable.yaml -i statement --push -o statement -vv \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} -d cache \
             -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u https://api.dev.scribesecurity.com \
             -O ${{ env.STATEMENT_FILE }} \
