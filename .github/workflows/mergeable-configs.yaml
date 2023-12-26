@@ -108,6 +108,10 @@ jobs:
       #     echo $SARIF_CONTENT > valint-report.sarif
       - name: Dummy Checkout
         uses: actions/checkout@v2
+      - name: DEBUG print SARIF file
+        run: |
+          echo "SARIF_FILE=${{ env.SARIF_FILE }}"
+          cat ${{ env.SARIF_FILE }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.3
         with:
