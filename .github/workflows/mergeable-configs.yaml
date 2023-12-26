@@ -92,7 +92,7 @@ jobs:
             -O ${{ env.STATEMENT_FILE }} \
             --policy sample-policies/policies/git \
             --policy sample-policies/policies/apis/gith-branch-protection.yml \
-              --policy-args Token="${{ secrets.GITHUB_TOKEN }}" \
+              --policy-args Token="${{ secrets.GHA_ACCESS_TOKEN }}" \
               --policy-args Owner="${{ github.repository_owner }}" \
               --policy-args Repo="$(basename ${{ github.repository }})" \
               --policy-args Branch="${{ github.ref_name }}" \
