@@ -1,6 +1,9 @@
 name: Full-Kit Policy Test
 on: [push, workflow_dispatch]
 
+permissions:
+  repository-projects: read
+
 env:
   PRODUCT_KEY: "buildindocker"
   HOSTNAME: ""
