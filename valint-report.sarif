@@ -1,0 +1,3155 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "informationUri": "https://scribesecurity.com",
+          "name": "valint",
+          "rules": [
+            {
+              "id": "coding-permissions",
+              "name": "default",
+              "shortDescription": {
+                "text": "default.coding-permissions"
+              },
+              "fullDescription": {
+                "text": "This rule checks if all commits in the specified repo are made by authorized authors. It takes a list of authors and a list of files to be checked as an input and issues an error if any commit to specified files was made by anyone not matching the authors list."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "help": {
+                "text": "default.coding-permissions",
+                "markdown": "## rule details\n\u003e **Signed evidence:** no\n\u003e **Identity:** Identity check skipped for unsigned evidence\n\u003e **Format:** statement-cyclonedx-json\n\u003e **Script:** /home/viktor/scribe/sample-policies/policies/git/coding-permissions.rego\n\n\n### **Match criteria**\n```yaml\nname: sigstore-local\nproduct_version: v0.1.30\ncontent_type: statement-cyclonedx-json\ncontext_type: local\npredicate_type: https://cyclonedx.org/bom\ngit_url: https://github.com/scribe-security/sigstore-local.git\ngit_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ntarget_type: git\n```\n\n\n### **Policy arguments**\n```yaml\nfiles:\n    - a.txt\nids:\n    - '@golang.com'\n    - '@golang.org'\n```\n\n\n### **Verified Evidence**\n```yaml\nhostname: thinkpad\nuser: viktor\nname: sigstore-local\nproduct_version: v0.1.30\ntimestamp: \"2023-12-25T15:34:56+02:00\"\ninput_scheme: git\ninput_name: /home/viktor/scribe/sigstore-local\ncontent_type: statement-cyclonedx-json\ncontext_type: local\npredicate_type: https://cyclonedx.org/bom\ngit_url: https://github.com/scribe-security/sigstore-local.git\ngit_branch: main\ngit_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ngit_ref: refs/heads/main\ntarget_git_url: https://github.com/scribe-security/sigstore-local.git\ntarget_git_branch: main\ntarget_git_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ntarget_git_ref: refs/heads/main\ntarget_type: git\nsbomgroup: git\nsbomname: https://github.com/scribe-security/sigstore-local.git\nsbomversion: sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824\nsbomhashs:\n    - sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824\nsbompurl: pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824\nref: /home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json\nstore: cache\n```\n"
+              },
+              "properties": {
+                "module-type": "verify-artifact",
+                "policy-name": "default",
+                "tags": [
+                  "policy",
+                  "sigstore-local",
+                  "v0.1.30",
+                  "statement-cyclonedx-json",
+                  "https://github.com/scribe-security/sigstore-local.git",
+                  "scribe",
+                  "local",
+                  "git",
+                  "/home/viktor/scribe/sigstore-local",
+                  "https://cyclonedx.org/bom"
+                ]
+              }
+            },
+            {
+              "id": "no-commits-to-main",
+              "name": "default",
+              "shortDescription": {
+                "text": "default.no-commits-to-main"
+              },
+              "fullDescription": {
+                "text": "The Verify Artifact module enforces a custom policy script"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "text": "default.no-commits-to-main",
+                "markdown": "## rule details\n\u003e **Signed evidence:** no\n\u003e **Identity:** Identity check skipped for unsigned evidence\n\u003e **Format:** statement-cyclonedx-json\n\u003e **Script:** /home/viktor/scribe/sample-policies/policies/git/no-commit-to-main.rego\n\n\n### **Match criteria**\n```yaml\nname: sigstore-local\nproduct_version: v0.1.30\ncontent_type: statement-cyclonedx-json\ncontext_type: local\npredicate_type: https://cyclonedx.org/bom\ngit_url: https://github.com/scribe-security/sigstore-local.git\ngit_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ntarget_type: git\n```\n\n\n### **Verified Evidence**\n```yaml\nhostname: thinkpad\nuser: viktor\nname: sigstore-local\nproduct_version: v0.1.30\ntimestamp: \"2023-12-25T15:34:56+02:00\"\ninput_scheme: git\ninput_name: /home/viktor/scribe/sigstore-local\ncontent_type: statement-cyclonedx-json\ncontext_type: local\npredicate_type: https://cyclonedx.org/bom\ngit_url: https://github.com/scribe-security/sigstore-local.git\ngit_branch: main\ngit_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ngit_ref: refs/heads/main\ntarget_git_url: https://github.com/scribe-security/sigstore-local.git\ntarget_git_branch: main\ntarget_git_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ntarget_git_ref: refs/heads/main\ntarget_type: git\nsbomgroup: git\nsbomname: https://github.com/scribe-security/sigstore-local.git\nsbomversion: sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824\nsbomhashs:\n    - sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824\nsbompurl: pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824\nref: /home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json\nstore: cache\n```\n"
+              },
+              "properties": {
+                "module-type": "verify-artifact",
+                "policy-name": "default",
+                "tags": [
+                  "scribe",
+                  "policy",
+                  "statement-cyclonedx-json",
+                  "/home/viktor/scribe/sigstore-local",
+                  "https://github.com/scribe-security/sigstore-local.git",
+                  "sigstore-local",
+                  "v0.1.30",
+                  "local",
+                  "git",
+                  "https://cyclonedx.org/bom"
+                ]
+              }
+            },
+            {
+              "id": "no-unsigned-commits",
+              "name": "default",
+              "shortDescription": {
+                "text": "default.no-unsigned-commits"
+              },
+              "fullDescription": {
+                "text": "The Verify Artifact module enforces a custom policy script"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "default.no-unsigned-commits",
+                "markdown": "## rule details\n\u003e **Signed evidence:** no\n\u003e **Identity:** Identity check skipped for unsigned evidence\n\u003e **Format:** statement-cyclonedx-json\n\u003e **Script:** /home/viktor/scribe/sample-policies/policies/git/no-unsigned-commits.rego\n\n\n### **Match criteria**\n```yaml\nname: sigstore-local\nproduct_version: v0.1.30\ncontent_type: statement-cyclonedx-json\ncontext_type: local\npredicate_type: https://cyclonedx.org/bom\ngit_url: https://github.com/scribe-security/sigstore-local.git\ngit_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ntarget_type: git\n```\n\n\n### **Verified Evidence**\n```yaml\nhostname: thinkpad\nuser: viktor\nname: sigstore-local\nproduct_version: v0.1.30\ntimestamp: \"2023-12-25T15:34:56+02:00\"\ninput_scheme: git\ninput_name: /home/viktor/scribe/sigstore-local\ncontent_type: statement-cyclonedx-json\ncontext_type: local\npredicate_type: https://cyclonedx.org/bom\ngit_url: https://github.com/scribe-security/sigstore-local.git\ngit_branch: main\ngit_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ngit_ref: refs/heads/main\ntarget_git_url: https://github.com/scribe-security/sigstore-local.git\ntarget_git_branch: main\ntarget_git_commit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\ntarget_git_ref: refs/heads/main\ntarget_type: git\nsbomgroup: git\nsbomname: https://github.com/scribe-security/sigstore-local.git\nsbomversion: sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824\nsbomhashs:\n    - sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824\nsbompurl: pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824\nref: /home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json\nstore: cache\n```\n"
+              },
+              "properties": {
+                "module-type": "verify-artifact",
+                "policy-name": "default",
+                "tags": [
+                  "v0.1.30",
+                  "/home/viktor/scribe/sigstore-local",
+                  "scribe",
+                  "policy",
+                  "sigstore-local",
+                  "https://cyclonedx.org/bom",
+                  "https://github.com/scribe-security/sigstore-local.git",
+                  "statement-cyclonedx-json",
+                  "local",
+                  "git"
+                ]
+              }
+            }
+          ],
+          "version": "0.0.0"
+        }
+      },
+      "invocations": [
+        {
+          "commandLine": "valint --format=sarif --input-format=statement --output-file=../ci-demo-app/valint-report.sarif --policy=[/home/viktor/scribe/sample-policies/policies/git] --product-key=sigstore-local --product-version=v0.1.30 --push=true",
+          "executionSuccessful": true,
+          "exitSignalName": "passed"
+        }
+      ],
+      "results": [
+        {
+          "properties": {
+            "verify-artifact.coding-permissions": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ]
+          },
+          "ruleId": "coding-permissions",
+          "ruleIndex": 0,
+          "kind": "pass",
+          "level": "note",
+          "message": {
+            "text": "Rule  passed verify-artifact because 1/1 evidence origin and signature verified",
+            "markdown": "Rule  passed verify-artifact because 1/1 evidence origin and signature verified"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.coding-permissions": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ]
+          },
+          "ruleId": "coding-permissions",
+          "ruleIndex": 0,
+          "kind": "pass",
+          "level": "note",
+          "message": {
+            "text": "Rule  passed because all required files are commited by authorized authors.",
+            "markdown": "Rule  passed because all required files are commited by authorized authors."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-commits-to-main": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ]
+          },
+          "ruleId": "no-commits-to-main",
+          "ruleIndex": 1,
+          "kind": "pass",
+          "level": "note",
+          "message": {
+            "text": "Rule  passed verify-artifact because 1/1 evidence origin and signature verified",
+            "markdown": "Rule  passed verify-artifact because 1/1 evidence origin and signature verified"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-commits-to-main": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "branch": "main"
+              },
+              "type": "Commits to main branch"
+            }
+          },
+          "ruleId": "no-commits-to-main",
+          "ruleIndex": 1,
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "\n\nRule  failed because found commits to main branch.\nError: Commits to main branch: found commits to main branch\nbranch: main\n",
+            "markdown": "\n\nRule  failed because found commits to main branch.\nError: Commits to main branch: found commits to main branch\nbranch: main\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ]
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "pass",
+          "level": "note",
+          "message": {
+            "text": "Rule  passed verify-artifact because 1/1 evidence origin and signature verified",
+            "markdown": "Rule  passed verify-artifact because 1/1 evidence origin and signature verified"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 01eff299b83100e167e075ec21b12d49fa487302\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 01eff299b83100e167e075ec21b12d49fa487302\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 030d9e8146121fd698bbdc32ae2e3785f70c4043\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 030d9e8146121fd698bbdc32ae2e3785f70c4043\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 14175bd3d6bffa97dbebedd9610ad1e6e19264b5\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 14175bd3d6bffa97dbebedd9610ad1e6e19264b5\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 1f2d3aa43d799aa9a934366debdbc504e07d7845\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 1f2d3aa43d799aa9a934366debdbc504e07d7845\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 3bd207ac9a9026c192fe518d30e588dcf5af3824\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 4881be1912ddbf4fd3f450b0d9766848d1ac3b4a\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 4881be1912ddbf4fd3f450b0d9766848d1ac3b4a\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 585edf620612e13b2802163a431603290371f2b4\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 585edf620612e13b2802163a431603290371f2b4\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 5ada86344668126f7d95f145d4e3f4cd27171dbc\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 5ada86344668126f7d95f145d4e3f4cd27171dbc\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 5f73f6838a3786abbb33b04016dd440b2b0a2d9f\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 5f73f6838a3786abbb33b04016dd440b2b0a2d9f\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 84c9a7a45c1c793db7495cc49a2ba61a8fdc8e98\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 84c9a7a45c1c793db7495cc49a2ba61a8fdc8e98\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 9a35f73a2f93b0cd7b36b2db31ca3b917856d65b\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 9a35f73a2f93b0cd7b36b2db31ca3b917856d65b\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 9c57667951c28da0f71f4d507a7097aebce1312b\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: 9c57667951c28da0f71f4d507a7097aebce1312b\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: b0ab3cc3c8ff3823dbd40f5bc5c56ef9a5839a1e\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: b0ab3cc3c8ff3823dbd40f5bc5c56ef9a5839a1e\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: b18fb2a5b378fadd56d87f656ce049d25b81985d\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: b18fb2a5b378fadd56d87f656ce049d25b81985d\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: d047ebedb2835422ffc82d47b1e250748929812b\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: d047ebedb2835422ffc82d47b1e250748929812b\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: d639635c817cd5de5ee184a68ba765f3bc85eb49\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: d639635c817cd5de5ee184a68ba765f3bc85eb49\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: ee454722cd590ca0adb1ee663c4f9e89f6383d2e\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: ee454722cd590ca0adb1ee663c4f9e89f6383d2e\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        },
+        {
+          "properties": {
+            "verify-artifact.no-unsigned-commits": [
+              {
+                "content_type": "statement-cyclonedx-json",
+                "context_type": "local",
+                "git_branch": "main",
+                "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "git_ref": "refs/heads/main",
+                "git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "hostname": "thinkpad",
+                "input_name": "/home/viktor/scribe/sigstore-local",
+                "input_scheme": "git",
+                "name": "sigstore-local",
+                "predicate_type": "https://cyclonedx.org/bom",
+                "product_version": "v0.1.30",
+                "ref": "/home/viktor/.cache/valint/sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json",
+                "sbomgroup": "git",
+                "sbomhashs": [
+                  "sha1-3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                ],
+                "sbomname": "https://github.com/scribe-security/sigstore-local.git",
+                "sbompurl": "pkg:git/https:/github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "sbomversion": "sha1:3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "store": "cache",
+                "target_git_branch": "main",
+                "target_git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+                "target_git_ref": "refs/heads/main",
+                "target_git_url": "https://github.com/scribe-security/sigstore-local.git",
+                "target_type": "git",
+                "timestamp": "2023-12-25T15:34:56+02:00",
+                "user": "viktor"
+              }
+            ],
+            "violation": {
+              "description": "",
+              "details": {
+                "commit": "eef67e55b0c8db7fa253b956c98b1ad2706fd61b"
+              },
+              "type": "Unsigned Commits"
+            }
+          },
+          "ruleId": "no-unsigned-commits",
+          "ruleIndex": 2,
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: eef67e55b0c8db7fa253b956c98b1ad2706fd61b\n",
+            "markdown": "\n\nRule  failed because some commits are unsigned.\nError: Unsigned Commits: some commits are unsigned\ncommit: eef67e55b0c8db7fa253b956c98b1ad2706fd61b\n"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git?version=3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "URL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PRODUCT"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/home/viktor/scribe/sigstore-local"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "NAME"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git@3bd207ac9a9026c192fe518d30e588dcf5af3824"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "PURL"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "%2Fhome%2Fviktor%2F.cache%2Fvalint%2Fsha1-3bd207ac9a9026c192fe518d30e588dcf5af3824.bom.statement.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "REF"
+              }
+            },
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "github.com/scribe-security/sigstore-local.git"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "message": {
+                "text": "GIT-URL"
+              }
+            }
+          ]
+        }
+      ],
+      "automationDetails": {
+        "id": "valint/1703581351"
+      },
+      "properties": {
+        "verifier-context": {
+          "hostname": "thinkpad",
+          "user": "viktor",
+          "name": "sigstore-local",
+          "product_version": "v0.1.30",
+          "timestamp": "2023-12-26T11:02:31+02:00",
+          "input_scheme": "empty",
+          "content_type": "sarif",
+          "context_type": "local",
+          "predicate_type": "https:/scribesecurity.com/v1/policy/result/sarif/2.1.0",
+          "git_url": "https://github.com/scribe-security/sigstore-local.git",
+          "git_branch": "main",
+          "git_commit": "3bd207ac9a9026c192fe518d30e588dcf5af3824",
+          "git_ref": "refs/heads/main",
+          "target_type": "policy-results",
+          "sbomgroup": "generic",
+          "sbomversion": "sha256:13682744dcdd88968d9c3d0169e60bb02a1c1891e212ae299e8bbba2bd3944de",
+          "sbomhashs": [
+            "sha256-13682744dcdd88968d9c3d0169e60bb02a1c1891e212ae299e8bbba2bd3944de"
+          ],
+          "policies": [
+            "default"
+          ],
+          "modules": [
+            "coding-permissions",
+            "no-commits-to-main",
+            "no-unsigned-commits"
+          ],
+          "module_types": [
+            "verify-artifact",
+            "verify-artifact",
+            "verify-artifact"
+          ],
+          "allow": true,
+          "policy-scripts": {
+            "coding-permissions.rego": "fb85dadc2c6e758de643b4654cb8276df829450be4adb0d5b56fe0d20c3fdfac",
+            "no-commit-to-main.rego": "450b44d9a3d24520a72c365b541b1f92bca00b258928c5e9b58e5637fb2137b3",
+            "no-unsigned-commits.rego": "e0df7f5e40850b2af0ad60b1497b506fb2f25e1e04b0411319ad0c275a90156d"
+          }
+        }
+      }
+    }
+  ]
+}
