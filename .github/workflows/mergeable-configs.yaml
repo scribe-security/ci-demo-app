@@ -203,10 +203,7 @@ jobs:
     name: Trivy scanner - Attach as evidence
     needs: [build-image]
     timeout-minutes: 3
-    strategy:
-      matrix:
-        platform: ["ubuntu-latest"]
-    runs-on: ${{ matrix.platform }}
+    runs-on: "ubuntu-latest"
     permissions:
       contents: read
       id-token: write
@@ -226,7 +223,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (on Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "/tmp/buildindocker.tar"
+          image-ref: /tmp/buildindocker.tar
           format: 'sarif'
           output: '${{ env.TRIVY_FILE }}'
           
@@ -277,10 +274,7 @@ jobs:
     name: Valint enforce policy
     needs: [TFSEC-scanner, trivy-scanner, valint-sbom-and-slsa]
     timeout-minutes: 3
-    strategy:
-      matrix:
-        platform: ["ubuntu-latest"]
-    runs-on: ${{ matrix.platform }}
+    runs-on: "ubuntu-latest"
     permissions:
       contents: read
       id-token: write
