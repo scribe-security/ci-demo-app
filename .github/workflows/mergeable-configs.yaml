@@ -183,12 +183,12 @@ jobs:
       id-token: write
 
     steps:
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
       - uses: actions/download-artifact@v4
         with:
           name: buildindockerTar
-      
-      - name: Install valint
-        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
 
       - name: Create Docker Image SBOM
         run: |
