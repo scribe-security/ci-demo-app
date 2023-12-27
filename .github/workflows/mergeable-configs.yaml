@@ -45,7 +45,7 @@ jobs:
             -E -vv
 
   build-image:
-    name: Build SBOMs & test policies
+    name: Build image job
     needs: [checkout-sign]
     runs-on: ubuntu-latest
     steps:
@@ -189,17 +189,14 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: buildindocker_archive
-      - run: |
-          ls -lh
-          ls -lh /tmp
-          
+
       - name: Create Docker Image SBOM
         run: |
           ${HOME}/.scribe/bin/valint bom docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv 
       - name: Create SLSA Provenance
         run: |
-          ${HOME}/.scribe/bin/valint slsa docker-archive:buildindocker.tar-c mergeable.yaml -f -o statement \
+          ${HOME}/.scribe/bin/valint slsa docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv
 
   # trivy-scanner:
