@@ -69,6 +69,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-public/buildInDocker
+          ref: main
+          path: buildindocker
+
       - name: Checkout Sample Policies Catalog
         uses: actions/checkout@v2
         with:
