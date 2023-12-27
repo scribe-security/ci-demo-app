@@ -226,7 +226,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (on Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: buildindocker.tar
+          image-ref: /tmp/buildindocker.tar
           format: 'sarif'
           output: '${{ env.TRIVY_FILE }}'
           
@@ -239,7 +239,6 @@ jobs:
 
   TFSEC-scanner:
     name: TFSEC scanner - Attach as evidence
-    needs: [build-image]
     timeout-minutes: 3
     strategy:
       matrix:
@@ -253,26 +252,22 @@ jobs:
     
       - name: Checkout
         uses: actions/checkout@v2
-    
+
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-public/buildInDocker
+          ref: main
+          path: buildindocker
+
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: buildindocker_archive
 
       - name: Run tfsec vulnerability scanner (on source code)
         uses: aquasecurity/tfsec-sarif-action@v0.1.0
         with:
           working_directory: buildindocker
           sarif_file: ${{ env.TFSEC_FILE }}
-          
-      - name: Create Generic Evidence out of Trivy report
-        run: |
-          ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
-            --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
-              -c mergeable.yaml -f -o statement-generic \
-              -E -vv
 
       - name: Create Generic Evidence out of tfsec report
         run: |
