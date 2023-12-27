@@ -19,10 +19,7 @@ jobs:
   checkout-sign:
     name: Valint Checkout Sign - Generate Source SBOM
     timeout-minutes: 3
-    strategy:
-      matrix:
-        platform: ["ubuntu-latest"]
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
@@ -176,10 +173,7 @@ jobs:
     name: Valint Image Sign - Generate SBOM and SLSA evidence
     needs: [build-image]
     timeout-minutes: 3
-    strategy:
-      matrix:
-        platform: ["ubuntu-latest"]
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
@@ -195,9 +189,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: buildindocker_archive
-          path: buildindocker.tar
       - run: |
           ls -lh
+          ls -lh /tmp
           
       - name: Create Docker Image SBOM
         run: |
