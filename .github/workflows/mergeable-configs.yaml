@@ -97,8 +97,8 @@ jobs:
       - name: Upload built docker
         uses: actions/upload-artifact@v3
         with:
-          path: /tmp/buildindocker.tar
           name: buildindockerTar
+          path: /tmp/buildindocker.tar
           retention-days: 1
 
 #       - name: Create Docker Image SBOM
@@ -172,7 +172,7 @@ jobs:
 
   valint-sbom-and-slsa:
     name: Valint Image Sign - Generate SBOM and SLSA evidence
-    needs: [build-image]
+    needs: [build-image, job_2]
     timeout-minutes: 3
     strategy:
       matrix:
@@ -189,7 +189,12 @@ jobs:
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
 
-      - uses: actions/download-artifact@v4
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: homework
+
+      - uses: actions/download-artifact@v3
         with:
           name: buildindockerTar
 
