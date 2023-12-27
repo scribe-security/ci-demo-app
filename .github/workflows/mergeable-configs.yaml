@@ -10,7 +10,7 @@ env:
   TRIVY_FILE: "trivy-results.sarif"
   TFSEC_FILE: "tfsec-results.sarif"
   VALINT_SCRIBE_AUTH_CLIENT_ID: ${{ secrets.SCRIBE_DEV_CLIENT_ID }}
-  VALINT_SCRIBE_AUTH_CLIENT_SECERT: ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }}
+  VALINT_SCRIBE_AUTH_CLIENT_SECRET: ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }}
   VALINT_SCRIBE_URL: "https://api.dev.scribesecurity.com"
 jobs:
   full-kit-check:
