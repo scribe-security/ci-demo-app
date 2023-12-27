@@ -73,12 +73,12 @@ jobs:
           ref: main
           path: buildindocker
 
-      - name: Checkout Sample Policies Catalog
-        uses: actions/checkout@v2
-        with:
-          repository: scribe-security/sample-policies
-          ref: feature/mergeable_valint_configs
-          path: sample-policies
+      # - name: Checkout Sample Policies Catalog
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: scribe-security/sample-policies
+      #     ref: feature/mergeable_valint_configs
+      #     path: sample-policies
 
       - name: Build Docker Image
         uses: docker/build-push-action@v5
@@ -226,7 +226,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (on Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: /tmp/buildindocker.tar
+          image-ref: "/tmp/buildindocker.tar"
           format: 'sarif'
           output: '${{ env.TRIVY_FILE }}'
           
@@ -240,10 +240,7 @@ jobs:
   TFSEC-scanner:
     name: TFSEC scanner - Attach as evidence
     timeout-minutes: 3
-    strategy:
-      matrix:
-        platform: ["ubuntu-latest"]
-    runs-on: ${{ matrix.platform }}
+    runs-on: "ubuntu-latest"
     permissions:
       contents: read
       id-token: write
@@ -275,3 +272,55 @@ jobs:
               --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
               -c mergeable.yaml -f -o statement-generic \
               -E -vv
+
+  policy-enforce:
+    name: Valint enforce policy
+    needs: [TFSEC-scanner, trivy-scanner, valint-sbom-and-slsa]
+    timeout-minutes: 3
+    strategy:
+      matrix:
+        platform: ["ubuntu-latest"]
+    runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Checkout Sample Policies Catalog
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-security/sample-policies
+          ref: feature/mergeable_valint_configs
+          path: sample-policies
+
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
+      - name: Set env vars
+        run: |
+          HOSTNAME="$(hostname -s)"
+          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
+
+      - name: Run valint verify
+        continue-on-error: true
+        run: |
+          ${HOME}/.scribe/bin/valint verify -c mergeable.yaml -i statement --push -o statement \
+            -E -vv \
+            -O ${{ env.STATEMENT_FILE }} \
+            --policy sample-policies/policies/git \
+            --policy sample-policies/policies/apis/gith-branch-protection.yml \
+            --policy sample-policies/policies/images \
+            --policy sample-policies/policies/sboms \
+            --policy sample-policies/policies/slsa \
+            --policy sample-policies/policies/sarif/trivy \
+            --policy sample-policies/policies/sarif/tfsec \
+            --policy-args Token="${{ secrets.GITHUB_TOKEN }}" \
+            --policy-args Owner="${{ github.repository_owner }}" \
+            --policy-args Repo="$(basename ${{ github.repository }})" \
+            --policy-args Branch="${{ github.ref_name }}" \
+            --policy-args BUILDER_ID="${{ env.HOSTNAME }}" \
+# process outputs
