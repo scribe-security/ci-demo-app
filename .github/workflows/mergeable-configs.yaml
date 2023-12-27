@@ -98,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: /tmp/buildindocker.tar
-          name: buildindocker
+          name: buildindockerTar
           retention-days: 1
 
 #       - name: Create Docker Image SBOM
@@ -171,7 +171,7 @@ jobs:
 #           sha: c603cd1f09c229ec26ac8cba4a899474d049be38
 
   valint-sbom-and-slsa:
-    name: Post build scanner
+    name: Valint create SBOM and SLSA evidence
     needs: [build-image]
     timeout-minutes: 3
     strategy:
@@ -183,12 +183,9 @@ jobs:
       id-token: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - uses: actions/download-artifact@v4
         with:
-          name: buildindocker
+          name: buildindockerTar
       
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
