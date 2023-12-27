@@ -17,7 +17,7 @@ env:
   VALINT_CONTEXT_NAME: "buildindocker" # Product Key
 jobs:
   checkout-sign:
-    name: Checkout Sign
+    name: Valint Checkout Sign - Generate Source SBOM
     timeout-minutes: 3
     strategy:
       matrix:
@@ -171,7 +171,7 @@ jobs:
 #           sha: c603cd1f09c229ec26ac8cba4a899474d049be38
 
   valint-sbom-and-slsa:
-    name: Valint create SBOM and SLSA evidence
+    name: Valint Image Sign - Generate SBOM and SLSA evidence
     needs: [build-image]
     timeout-minutes: 3
     strategy:
@@ -183,6 +183,9 @@ jobs:
       id-token: write
 
     steps:
+      - run: |
+          sleep 30
+
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
 
