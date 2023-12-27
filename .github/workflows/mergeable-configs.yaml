@@ -59,9 +59,6 @@ jobs:
 
       - name: Setup Buildx for Docker
         uses: docker/setup-buildx-action@v2
-
-      - name: 'Setup jq'
-        uses: dcarbone/install-jq-action@v2.1.0
 # checkouts
       - name: Checkout
         uses: actions/checkout@v2
@@ -318,6 +315,8 @@ jobs:
             --policy-args Branch="${{ github.ref_name }}" \
             --policy-args BUILDER_ID="${{ env.HOSTNAME }}" \
 # process outputs
+      - name: 'Setup jq'
+        uses: dcarbone/install-jq-action@v2.1.0
       - name: Convert in-toto statement to SARIF # no need if we use only one of ScribeHub/GitHub
         run: |
           SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.STATEMENT_FILE }})
