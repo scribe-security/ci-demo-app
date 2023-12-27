@@ -185,7 +185,7 @@ jobs:
       id-token: write
 
     steps:
-    
+
       - name: Checkout
         uses: actions/checkout@v2
     
@@ -195,12 +195,50 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: buildindocker_archive
+          path: buildindocker.tar
 
       - name: Create Docker Image SBOM
         run: |
-          ${HOME}/.scribe/bin/valint bom docker-archive:/tmp/buildindocker.tar -c mergeable.yaml -f -o statement \
+          ${HOME}/.scribe/bin/valint bom docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv 
       - name: Create SLSA Provenance
         run: |
-          ${HOME}/.scribe/bin/valint slsa docker-archive:/tmp/buildindocker.tar -c mergeable.yaml -f -o statement \
+          ${HOME}/.scribe/bin/valint slsa docker-archive:buildindocker.tar-c mergeable.yaml -f -o statement \
             -E -vv
+
+  # trivy-scanner:
+  #   name: Valint Image Sign - Generate SBOM and SLSA evidence
+  #   needs: [build-image]
+  #   timeout-minutes: 3
+  #   strategy:
+  #     matrix:
+  #       platform: ["ubuntu-latest"]
+  #   runs-on: ${{ matrix.platform }}
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+
+  #   steps:
+    
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+    
+  #     - name: Install valint
+  #       run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: buildindocker_archive
+
+  #     - name: Run Trivy vulnerability scanner (on Docker Image)
+  #       uses: aquasecurity/trivy-action@master
+  #       with:
+  #         image-ref: 'buildindocker:latest'
+  #         format: 'sarif'
+  #         output: '${{ env.TRIVY_FILE }}'
+  #     - name: Create Generic Evidence out of Trivy report
+  #       run: |
+  #         ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
+  #           --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
+  #             -c mergeable.yaml -f -o statement-generic \
+  #             -E -vv
