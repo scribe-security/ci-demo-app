@@ -199,39 +199,40 @@ jobs:
           ${HOME}/.scribe/bin/valint slsa docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv
 
-  # trivy-scanner:
-  #   name: Trivy scanner - Attach as evidence
-  #   needs: [build-image]
-  #   timeout-minutes: 3
-  #   strategy:
-  #     matrix:
-  #       platform: ["ubuntu-latest"]
-  #   runs-on: ${{ matrix.platform }}
-  #   permissions:
-  #     contents: read
-  #     id-token: write
+  trivy-scanner:
+    name: Trivy scanner - Attach as evidence
+    needs: [build-image]
+    timeout-minutes: 3
+    strategy:
+      matrix:
+        platform: ["ubuntu-latest"]
+    runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: read
+      id-token: write
 
-  #   steps:
+    steps:
     
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
     
-  #     - name: Install valint
-  #       run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
 
-  #     - uses: actions/download-artifact@v3
-  #       with:
-  #         name: buildindocker_archive
+      - uses: actions/download-artifact@v3
+        with:
+          name: buildindocker_archive
 
-  #     - name: Run Trivy vulnerability scanner (on Docker Image)
-  #       uses: aquasecurity/trivy-action@master
-  #       with:
-  #         image-ref: 'buildindocker:latest'
-  #         format: 'sarif'
-  #         output: '${{ env.TRIVY_FILE }}'
-  #     - name: Create Generic Evidence out of Trivy report
-  #       run: |
-  #         ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
-  #           --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
-  #             -c mergeable.yaml -f -o statement-generic \
-  #             -E -vv
+      - name: Run Trivy vulnerability scanner (on Docker Image)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: buildindocker.tar
+          format: 'sarif'
+          output: '${{ env.TRIVY_FILE }}'
+          
+      - name: Create Generic Evidence out of Trivy report
+        run: |
+          ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
+            --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
+              -c mergeable.yaml -f -o statement-generic \
+              -E -vv
