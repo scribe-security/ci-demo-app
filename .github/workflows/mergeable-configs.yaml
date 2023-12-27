@@ -16,8 +16,36 @@ env:
   VALINT_CONTEXT_PRODUCT_VERSION: ${{ github.run_number }}
   VALINT_CONTEXT_NAME: "buildindocker" # Product Key
 jobs:
+  checkout-sign:
+    name: Checkout Sign
+    timeout-minutes: 3
+    strategy:
+      matrix:
+        platform: ["ubuntu-latest"]
+    runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-public/buildInDocker
+          ref: main
+          path: buildindocker
+
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
+      - name: Create Git SBOM
+        run: |
+          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -c mergeable.yaml -f -o statement --components commits,files \
+            -E -vv
+
   full-kit-check:
     name: Build SBOMs & test policies
+    needs: [checkout-sign]
     runs-on: ubuntu-latest
     steps:
       - name: Set env vars
@@ -40,18 +68,18 @@ jobs:
           repository: scribe-security/sample-policies
           ref: feature/mergeable_valint_configs
           path: sample-policies
-      - name: Checkout test repo
-        uses: actions/checkout@v2
-        with:
-          repository: scribe-public/buildInDocker
-          ref: main
-          path: buildindocker
-# create GIT SBOM
-      - name: Create Git SBOM
-        run: |
-          printenv
-          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -c mergeable.yaml -f -o statement --components commits,files \
-            -E -vv
+#       - name: Checkout test repo
+#         uses: actions/checkout@v2
+#         with:
+#           repository: scribe-public/buildInDocker
+#           ref: main
+#           path: buildindocker
+# # create GIT SBOM
+#       - name: Create Git SBOM
+#         run: |
+#           printenv
+#           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -c mergeable.yaml -f -o statement --components commits,files \
+#             -E -vv
 # Build Image & create SBOM out of it
       - name: Build Docker Image
         uses: docker/build-push-action@v4
