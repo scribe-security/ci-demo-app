@@ -59,32 +59,23 @@ jobs:
 # installations
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
       - name: Setup Buildx for Docker
         uses: docker/setup-buildx-action@v2
+
       - name: 'Setup jq'
         uses: dcarbone/install-jq-action@v2.1.0
 # checkouts
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Checkout Sample Policies Catalog
         uses: actions/checkout@v2
         with:
           repository: scribe-security/sample-policies
           ref: feature/mergeable_valint_configs
           path: sample-policies
-#       - name: Checkout test repo
-#         uses: actions/checkout@v2
-#         with:
-#           repository: scribe-public/buildInDocker
-#           ref: main
-#           path: buildindocker
-# # create GIT SBOM
-#       - name: Create Git SBOM
-#         run: |
-#           printenv
-#           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -c mergeable.yaml -f -o statement --components commits,files \
-#             -E -vv
-# Build Image & create SBOM out of it
+
       - name: Build Docker Image
         uses: docker/build-push-action@v4
         with:
@@ -94,12 +85,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: false
-          outputs: type=docker,dest=buildindocker.tar
+          outputs: type=docker,dest=/tmp/buildindocker.tar
 
       - name: Upload built docker
         uses: actions/upload-artifact@v3
         with:
-          path: buildindocker.tar
+          path: /tmp/buildindocker.tar
+          name: buildindocker
           retention-days: 1
 
 #       - name: Create Docker Image SBOM
@@ -189,16 +181,16 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: buildindocker.tar
+          name: buildindocker
       
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
 
       - name: Create Docker Image SBOM
         run: |
-          ${HOME}/.scribe/bin/valint bom docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
+          ${HOME}/.scribe/bin/valint bom docker-archive:/tmp/buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv 
       - name: Create SLSA Provenance
         run: |
-          ${HOME}/.scribe/bin/valint slsa docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
+          ${HOME}/.scribe/bin/valint slsa docker-archive:/tmp/buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv
