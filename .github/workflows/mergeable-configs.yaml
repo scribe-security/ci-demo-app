@@ -196,7 +196,9 @@ jobs:
         with:
           name: buildindocker_archive
           path: buildindocker.tar
-
+      - run: |
+          ls -lh
+          
       - name: Create Docker Image SBOM
         run: |
           ${HOME}/.scribe/bin/valint bom docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
@@ -207,7 +209,7 @@ jobs:
             -E -vv
 
   # trivy-scanner:
-  #   name: Valint Image Sign - Generate SBOM and SLSA evidence
+  #   name: Trivy scanner - Attach as evidence
   #   needs: [build-image]
   #   timeout-minutes: 3
   #   strategy:
