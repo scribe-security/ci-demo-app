@@ -54,6 +54,7 @@ jobs:
         run: |
           HOSTNAME="$(hostname -s)"
           echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
+          echo ${HOSTNAME} > /tmp/HOSTNAME
 # installations
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
@@ -88,7 +89,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: buildindocker_archive
-          path: /tmp/buildindocker.tar
+          path: |
+            /tmp/buildindocker.tar
+            /tmp/HOSTNAME
           retention-days: 1
 
   valint-sbom-and-slsa:
@@ -209,6 +212,11 @@ jobs:
           repository: scribe-security/sample-policies
           ref: feature/mergeable_valint_configs
           path: sample-policies
+
+      - name: Read HOSTNAME
+        run: |
+          HOSTNAME=$(cat /tmp/HOSTNAME)
+          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
 
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
