@@ -1,0 +1,3 @@
+verify:
+  formats: statement
+  input-format: statement

@@ -1,0 +1,132 @@
+name: Full-Kit Policy Test
+on: [push, workflow_dispatch]
+
+env:
+  PRODUCT_KEY: "buildindocker"
+  HOSTNAME: ""
+  STATEMENT_FILE: "valint-report.sarif.json"
+  SARIF_FILE: "valint-report.sarif"
+  SCRIBE_URL: "https://api.dev.scribesecurity.com"
+  TRIVY_FILE: "trivy-results.sarif"
+  TFSEC_FILE: "tfsec-results.sarif"
+
+jobs:
+  full-kit-check:
+    name: Build SBOMs & test policies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env vars
+        run: |
+          HOSTNAME="$(hostname -s)"
+          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
+# installations
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+      - name: Setup Buildx for Docker
+        uses: docker/setup-buildx-action@v2
+      - name: 'Setup jq'
+        uses: dcarbone/install-jq-action@v2.1.0
+# checkouts
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Checkout Sample Policies Catalog
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-security/sample-policies
+          ref: feature/mergeable_valint_configs
+          path: sample-policies
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-public/buildInDocker
+          ref: main
+          path: buildindocker
+# create GIT SBOM
+      - name: Create Git SBOM
+        run: |
+          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -c mergeable.yaml -f -o statement --components commits,files \
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+# Build Image & create SBOM out of it
+      - name: Build Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: buildindocker
+          tags: buildindocker:latest
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: false
+      - name: Create Docker Image SBOM
+        run: |
+          ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+      - name: Create SLSA Provenance
+        run: |
+          ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+# run vulnerability scanners
+      - name: Run tfsec vulnerability scanner (on source code)
+        uses: aquasecurity/tfsec-sarif-action@v0.1.0
+        with:
+          working_directory: buildindocker
+          sarif_file: ${{ env.TFSEC_FILE }}
+      - name: Create Generic Evidence out of tfsec report
+        run: |
+          ${HOME}/.scribe/bin/valint bom ${{ env.TFSEC_FILE}} \
+              --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
+              -C github -c mergeable.yaml -f -o statement-generic \
+              --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
+              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+      - name: Run Trivy vulnerability scanner (on Docker Image)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'buildindocker:latest'
+          format: 'sarif'
+          output: '${{ env.TRIVY_FILE }}'
+      - name: Create Generic Evidence out of Trivy report
+        run: |
+          ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
+            --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
+              -C github -c mergeable.yaml -f -o statement-generic \
+              --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
+              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+# run valint verify
+      - name: Run valint verify
+        continue-on-error: true
+        run: |
+          ${HOME}/.scribe/bin/valint verify -C github -c mergeable.yaml -i statement --push -o statement \
+            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
+            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }} \
+            -O ${{ env.STATEMENT_FILE }} \
+            --policy sample-policies/policies/git \
+            --policy sample-policies/policies/apis/gith-branch-protection.yml \
+            --policy sample-policies/policies/images \
+            --policy sample-policies/policies/sboms \
+            --policy sample-policies/policies/slsa \
+            --policy sample-policies/policies/sarif/trivy \
+            --policy sample-policies/policies/sarif/tfsec \
+            --policy-args Token="${{ secrets.GITHUB_TOKEN }}" \
+            --policy-args Owner="${{ github.repository_owner }}" \
+            --policy-args Repo="$(basename ${{ github.repository }})" \
+            --policy-args Branch="${{ github.ref_name }}" \
+            --policy-args BUILDER_ID="${{ env.HOSTNAME }}" \
+# process outputs
+      - name: Convert in-toto statement to SARIF # no need if we use only one of ScribeHub/GitHub
+        run: |
+          SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.STATEMENT_FILE }})
+          echo $SARIF_CONTENT > ${{ env.SARIF_FILE }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: valint-report
+          path: ${{ env.SARIF_FILE }}
+      - name: Upload SARIF file to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ env.SARIF_FILE }}
+          category: valint
+          ref: refs/heads/main
+          sha: c603cd1f09c229ec26ac8cba4a899474d049be38
