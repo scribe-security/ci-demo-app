@@ -318,3 +318,19 @@ jobs:
             --policy-args Branch="${{ github.ref_name }}" \
             --policy-args BUILDER_ID="${{ env.HOSTNAME }}" \
 # process outputs
+      - name: Convert in-toto statement to SARIF # no need if we use only one of ScribeHub/GitHub
+        run: |
+          SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.STATEMENT_FILE }})
+          echo $SARIF_CONTENT > ${{ env.SARIF_FILE }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: valint-report
+          path: ${{ env.SARIF_FILE }}
+      - name: Upload SARIF file to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ env.SARIF_FILE }}
+          category: valint
+          ref: refs/heads/main
+          sha: c603cd1f09c229ec26ac8cba4a899474d049be38
