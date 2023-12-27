@@ -93,11 +93,13 @@ jobs:
           cache-to: type=gha,mode=max
           push: false
           outputs: type=docker,dest=/tmp/buildindocker.tar
+          
+      - run: ls -lh /tmp
 
       - name: Upload built docker
         uses: actions/upload-artifact@v3
         with:
-          name: buildindockerTar
+          name: buildindocker_archive
           path: /tmp/buildindocker.tar
           retention-days: 1
 
@@ -183,9 +185,6 @@ jobs:
       id-token: write
 
     steps:
-      - run: |
-          sleep 30
-
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
 
@@ -196,7 +195,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: buildindockerTar
+          name: buildindocker_archive
 
       - name: Create Docker Image SBOM
         run: |
