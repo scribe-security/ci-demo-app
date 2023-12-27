@@ -9,7 +9,9 @@ env:
   SCRIBE_URL: "https://api.dev.scribesecurity.com"
   TRIVY_FILE: "trivy-results.sarif"
   TFSEC_FILE: "tfsec-results.sarif"
-
+  VALINT_SCRIBE_AUTH_CLIENT_ID: ${{ secrets.SCRIBE_DEV_CLIENT_ID }}
+  VALINT_SCRIBE_AUTH_CLIENT_SECERT: ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }}
+  VALINT_SCRIBE_URL: "https://api.dev.scribesecurity.com"
 jobs:
   full-kit-check:
     name: Build SBOMs & test policies
@@ -46,7 +48,7 @@ jobs:
         run: |
           ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -c mergeable.yaml -f -o statement --components commits,files \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+            -E
 # Build Image & create SBOM out of it
       - name: Build Docker Image
         uses: docker/build-push-action@v4
@@ -61,12 +63,12 @@ jobs:
         run: |
           ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+            -E 
       - name: Create SLSA Provenance
         run: |
           ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+            -E
 # run vulnerability scanners
       - name: Run tfsec vulnerability scanner (on source code)
         uses: aquasecurity/tfsec-sarif-action@v0.1.0
@@ -79,7 +81,7 @@ jobs:
               --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
               -C github -c mergeable.yaml -f -o statement-generic \
               --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+              -E
       - name: Run Trivy vulnerability scanner (on Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
@@ -92,14 +94,14 @@ jobs:
             --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
               -C github -c mergeable.yaml -f -o statement-generic \
               --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+              -E
 # run valint verify
       - name: Run valint verify
         continue-on-error: true
         run: |
           ${HOME}/.scribe/bin/valint verify -C github -c mergeable.yaml -i statement --push -o statement \
             --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }} \
+            -E \
             -O ${{ env.STATEMENT_FILE }} \
             --policy sample-policies/policies/git \
             --policy sample-policies/policies/apis/gith-branch-protection.yml \
