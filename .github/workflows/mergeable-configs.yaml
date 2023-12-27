@@ -223,7 +223,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (on Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
-          input: buildindocker
+          input: buildindocker.tar
           format: 'sarif'
           output: '${{ env.TRIVY_FILE }}'
           
