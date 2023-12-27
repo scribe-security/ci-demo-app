@@ -174,7 +174,7 @@ jobs:
 
   valint-sbom-and-slsa:
     name: Valint Image Sign - Generate SBOM and SLSA evidence
-    needs: [build-image, job_2]
+    needs: [build-image]
     timeout-minutes: 3
     strategy:
       matrix:
@@ -185,13 +185,12 @@ jobs:
       id-token: write
 
     steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+    
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
-
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v3
-        with:
-          name: homework
 
       - uses: actions/download-artifact@v3
         with:
@@ -205,50 +204,3 @@ jobs:
         run: |
           ${HOME}/.scribe/bin/valint slsa docker-archive:/tmp/buildindocker.tar -c mergeable.yaml -f -o statement \
             -E -vv
-
-  job_1:
-    name: Add 3 and 7
-    runs-on: ubuntu-latest
-    steps:
-      - shell: bash
-        run: |
-          expr 3 + 7 > math-homework.txt
-      - name: Upload math result for job 1
-        uses: actions/upload-artifact@v3
-        with:
-          name: homework
-          path: math-homework.txt
-
-  job_2:
-    name: Multiply by 9
-    needs: job_1
-    runs-on: windows-latest
-    steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v3
-        with:
-          name: homework
-      - shell: bash
-        run: |
-          value=`cat math-homework.txt`
-          expr $value \* 9 > math-homework.txt
-      - name: Upload math result for job 2
-        uses: actions/upload-artifact@v3
-        with:
-          name: homework
-          path: math-homework.txt
-
-  job_3:
-    name: Display results
-    needs: job_2
-    runs-on: macOS-latest
-    steps:
-      - name: Download math result for job 2
-        uses: actions/download-artifact@v3
-        with:
-          name: homework
-      - name: Print the final result
-        shell: bash
-        run: |
-          value=`cat math-homework.txt`
-          echo The result is $value
