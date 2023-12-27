@@ -9,47 +9,71 @@ env:
   SCRIBE_URL: "https://api.dev.scribesecurity.com"
   TRIVY_FILE: "trivy-results.sarif"
   TFSEC_FILE: "tfsec-results.sarif"
-
+  VALINT_SCRIBE_AUTH_CLIENT_ID: ${{ secrets.SCRIBE_DEV_CLIENT_ID }}
+  VALINT_SCRIBE_AUTH_CLIENT_SECRET: ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }}
+  VALINT_SCRIBE_URL: "https://api.dev.scribesecurity.com"
+  VALINT_CONTEXT_CONTEXT_TYPE: github
+  VALINT_CONTEXT_PRODUCT_VERSION: ${{ github.run_number }}
+  VALINT_CONTEXT_NAME: "buildindocker" # Product Key
+  VALINT_VERBOSE: "-vv"
 jobs:
-  full-kit-check:
-    name: Build SBOMs & test policies
+  checkout-sign:
+    name: Valint Checkout Sign - Generate Source SBOM
+    timeout-minutes: 3
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
-      - name: Set env vars
-        run: |
-          HOSTNAME="$(hostname -s)"
-          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
-# installations
-      - name: Install valint
-        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
-      - name: Setup Buildx for Docker
-        uses: docker/setup-buildx-action@v2
-      - name: 'Setup jq'
-        uses: dcarbone/install-jq-action@v2.1.0
-# checkouts
+
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Checkout Sample Policies Catalog
-        uses: actions/checkout@v2
-        with:
-          repository: scribe-security/sample-policies
-          ref: feature/mergeable_valint_configs
-          path: sample-policies
+
       - name: Checkout test repo
         uses: actions/checkout@v2
         with:
           repository: scribe-public/buildInDocker
           ref: main
           path: buildindocker
-# create GIT SBOM
+
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
       - name: Create Git SBOM
         run: |
-          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -C github -c mergeable.yaml -f -o statement --components commits,files \
-            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
-# Build Image & create SBOM out of it
+          ${HOME}/.scribe/bin/valint bom git:buildindocker/ -c mergeable.yaml -f -o statement --components commits,files \
+            -E ${{ env.VALINT_VERBOSE }}
+
+  build-image:
+    name: Build image job
+    needs: [checkout-sign]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env vars
+        run: |
+          HOSTNAME="$(hostname -s)"
+          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
+          echo ${HOSTNAME} > /tmp/HOSTNAME.txt
+# installations
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
+      - name: Setup Buildx for Docker
+        uses: docker/setup-buildx-action@v2
+# checkouts
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-public/buildInDocker
+          ref: main
+          path: buildindocker
+
       - name: Build Docker Image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: buildindocker
           tags: buildindocker:latest
@@ -57,49 +81,160 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: false
+          outputs: type=docker,dest=/tmp/buildindocker.tar
+          
+      - run: ls -lh /tmp
+
+      - name: Upload built docker
+        uses: actions/upload-artifact@v3
+        with:
+          name: buildindocker_archive
+          path: /tmp/buildindocker.tar
+          retention-days: 1
+
+      - name: Upload hostname var
+        uses: actions/upload-artifact@v3
+        with:
+          name: hostname
+          path: /tmp/HOSTNAME.txt
+          retention-days: 1
+
+  valint-sbom-and-slsa:
+    name: Valint Image Sign - Generate SBOM and SLSA evidence
+    needs: [build-image]
+    timeout-minutes: 3
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: buildindocker_archive
+
       - name: Create Docker Image SBOM
         run: |
-          ${HOME}/.scribe/bin/valint bom docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
-            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
+          ${HOME}/.scribe/bin/valint bom docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
+            -E ${{ env.VALINT_VERBOSE }} 
       - name: Create SLSA Provenance
         run: |
-          ${HOME}/.scribe/bin/valint slsa docker:buildindocker:latest -C github -c mergeable.yaml -f -o statement \
-            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
-# run vulnerability scanners
+          ${HOME}/.scribe/bin/valint slsa docker-archive:buildindocker.tar -c mergeable.yaml -f -o statement \
+            -E ${{ env.VALINT_VERBOSE }}
+
+  trivy-scanner:
+    name: Trivy scanner - Attach as evidence
+    needs: [build-image]
+    timeout-minutes: 3
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: buildindocker_archive
+
+      - name: Run Trivy vulnerability scanner (on Docker Image)
+        uses: aquasecurity/trivy-action@master
+        with:
+          input: buildindocker.tar
+          format: 'sarif'
+          output: '${{ env.TRIVY_FILE }}'
+          
+      - name: Create Generic Evidence out of Trivy report
+        run: |
+          ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
+            --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
+              -c mergeable.yaml -f -o statement-generic \
+              -E ${{ env.VALINT_VERBOSE }}
+
+  TFSEC-scanner:
+    name: TFSEC scanner - Attach as evidence
+    timeout-minutes: 3
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: scribe-public/buildInDocker
+          ref: main
+          path: buildindocker
+
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
       - name: Run tfsec vulnerability scanner (on source code)
         uses: aquasecurity/tfsec-sarif-action@v0.1.0
         with:
           working_directory: buildindocker
           sarif_file: ${{ env.TFSEC_FILE }}
+
       - name: Create Generic Evidence out of tfsec report
         run: |
           ${HOME}/.scribe/bin/valint bom ${{ env.TFSEC_FILE}} \
               --predicate-type http://docs.oasis-open.org/sarif/sarif/2.1.0 \
-              -C github -c mergeable.yaml -f -o statement-generic \
-              --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
-      - name: Run Trivy vulnerability scanner (on Docker Image)
-        uses: aquasecurity/trivy-action@master
+              -c mergeable.yaml -f -o statement-generic \
+              -E ${{ env.VALINT_VERBOSE }}
+
+  policy-enforce:
+    name: Valint enforce policy
+    needs: [TFSEC-scanner, trivy-scanner, valint-sbom-and-slsa]
+    timeout-minutes: 3
+    runs-on: "ubuntu-latest"
+
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Checkout Sample Policies Catalog
+        uses: actions/checkout@v2
         with:
-          image-ref: 'buildindocker:latest'
-          format: 'sarif'
-          output: '${{ env.TRIVY_FILE }}'
-      - name: Create Generic Evidence out of Trivy report
+          repository: scribe-security/sample-policies
+          ref: feature/mergeable_valint_configs
+          path: sample-policies
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: hostname
+
+      - name: Read HOSTNAME
         run: |
-          ${HOME}/.scribe/bin/valint bom ${{ env.TRIVY_FILE }} \
-            --predicate-type https://aquasecurity.github.io/trivy/v0.42/docs/configuration/reporting/#sarif \
-              -C github -c mergeable.yaml -f -o statement-generic \
-              --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-              -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }}
-# run valint verify
+          HOSTNAME=$(cat HOSTNAME.txt)
+          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
+
+      - name: Install valint
+        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
+
       - name: Run valint verify
         continue-on-error: true
         run: |
-          ${HOME}/.scribe/bin/valint verify -C github -c mergeable.yaml -i statement --push -o statement \
-            --product-key ${{ env.PRODUCT_KEY }} --product-version ${{ github.run_number }} \
-            -E -U ${{ secrets.SCRIBE_DEV_CLIENT_ID }} -P ${{ secrets.SCRIBE_DEV_CLIENT_SECRET }} -u ${{ env.SCRIBE_URL }} \
+          ${HOME}/.scribe/bin/valint verify -c mergeable.yaml -i statement --push -o statement \
+            -E ${{ env.VALINT_VERBOSE }} \
             -O ${{ env.STATEMENT_FILE }} \
             --policy sample-policies/policies/git \
             --policy sample-policies/policies/apis/gith-branch-protection.yml \
@@ -114,6 +249,8 @@ jobs:
             --policy-args Branch="${{ github.ref_name }}" \
             --policy-args BUILDER_ID="${{ env.HOSTNAME }}" \
 # process outputs
+      - name: 'Setup jq'
+        uses: dcarbone/install-jq-action@v2.1.0
       - name: Convert in-toto statement to SARIF # no need if we use only one of ScribeHub/GitHub
         run: |
           SARIF_CONTENT=$(jq -r '.predicate.content' ${{ env.STATEMENT_FILE }})
