@@ -27,18 +27,6 @@ jobs:
 # installations
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
-
-  full-kit-check:
-    name: Build SBOMs & test policies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set env vars
-        run: |
-          HOSTNAME="$(hostname -s)"
-          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
-# installations
-      - name: Install valint
-        run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
       - name: Setup Buildx for Docker
         uses: docker/setup-buildx-action@v2
       - name: 'Setup jq'
