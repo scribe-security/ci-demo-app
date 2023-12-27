@@ -272,9 +272,6 @@ jobs:
     needs: [TFSEC-scanner, trivy-scanner, valint-sbom-and-slsa]
     timeout-minutes: 3
     runs-on: "ubuntu-latest"
-    permissions:
-      contents: read
-      id-token: write
 
     steps:
     
@@ -290,11 +287,6 @@ jobs:
 
       - name: Install valint
         run: curl -sSfL https://get.scribesecurity.com/install.sh | sh -s -- -t valint -D
-
-      - name: Set env vars
-        run: |
-          HOSTNAME="$(hostname -s)"
-          echo "HOSTNAME=${HOSTNAME}" >> $GITHUB_ENV
 
       - name: Run valint verify
         continue-on-error: true
